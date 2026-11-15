@@ -1,0 +1,19 @@
+## What lives here
+
+The automation stack brings together n8n, PostgreSQL, and a small Python service for PDF processing. n8n provides the workflow layer, PostgreSQL stores its application data, and the PDF service handles document operations.
+
+The PDF service uses Flask, qpdf, and OCRmyPDF. Its documented capabilities include unlocking password-protected PDFs when the password is supplied, and adding optical character recognition to documents.
+
+## How the pieces connect
+
+n8n and the PDF service share a file volume. A workflow can refer to a document in that shared workspace rather than passing the entire file between containers. Services communicate over their Docker network using service names.
+
+PostgreSQL is an internal dependency of n8n. It is not exposed as a public database endpoint in the documented setup.
+
+## The operational side
+
+The configuration includes database health checks, execution-history pruning, container restart policies, and log rotation. Application data lives outside the containers so an image can be replaced without replacing the underlying data.
+
+## What I’m interested in exploring
+
+This is a useful place to keep developing small, understandable workflows: explicit inputs, predictable file handling, and outputs that can be checked. Public workflow demonstrations and deeper implementation notes can grow from that foundation.

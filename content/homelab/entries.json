@@ -1,0 +1,30 @@
+[
+  {
+    "id": "homelab-automation", "slug": "automation", "title": "Automation & documents",
+    "type": "homelab-service", "summary": "An automation stack that brings workflows, shared files, and PDF processing together.",
+    "disciplines": ["Automation", "Document processing"], "technologies": ["n8n", "PostgreSQL", "Python", "qpdf", "OCRmyPDF"],
+    "status": "ongoing", "publicationState": "published", "disclosureStatus": "approved", "featured": true,
+    "relatedIds": ["homelab-git", "homelab-monitoring"]
+  },
+  {
+    "id": "homelab-git", "slug": "git-hosting", "title": "A home for the source",
+    "type": "homelab-service", "summary": "Self-hosted Git repository management with Gitea and PostgreSQL.",
+    "disciplines": ["Infrastructure", "Development"], "technologies": ["Gitea", "PostgreSQL", "Docker Compose"],
+    "status": "ongoing", "publicationState": "published", "disclosureStatus": "approved",
+    "relatedIds": ["homelab-automation"]
+  },
+  {
+    "id": "homelab-monitoring", "slug": "monitoring", "title": "Keeping an eye on things",
+    "type": "homelab-service", "summary": "Resource monitoring and service checks with Beszel and Uptime Kuma.",
+    "disciplines": ["Infrastructure", "Observability"], "technologies": ["Beszel", "Beszel Agent", "Uptime Kuma"],
+    "status": "ongoing", "publicationState": "published", "disclosureStatus": "approved",
+    "relatedIds": ["homelab-automation", "homelab-git"]
+  },
+  {
+    "id": "homelab-media", "slug": "media", "title": "The everyday side of self-hosting",
+    "type": "homelab-service", "summary": "Personal media services, with application configuration and library storage kept separate.",
+    "disciplines": ["Infrastructure", "Storage"], "technologies": ["Jellyfin", "Audiobookshelf", "Docker Compose"],
+    "status": "ongoing", "publicationState": "published", "disclosureStatus": "approved",
+    "relatedIds": ["homelab-monitoring"]
+  }
+]

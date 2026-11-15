@@ -1,0 +1,17 @@
+## Two complementary views
+
+The monitoring stack uses Beszel and Beszel Agent for resource monitoring, alongside Uptime Kuma for service-availability checks.
+
+Beszel provides a view of the host and its containers, including CPU, memory, and filesystem information. Uptime Kuma checks configured endpoints to help distinguish a running machine from an available service.
+
+## Understanding the boundaries
+
+The agent collects host and container information, while the hub presents and stores it. Uptime Kuma makes separate HTTP or TCP checks against the services configured for monitoring.
+
+These tools answer different questions: how much of the host is being used, and whether a particular service responds.
+
+## A record, not a live dashboard
+
+This portfolio presents a high-level summary of the documented monitoring setup. It does not connect visitors to the monitoring tools or display live uptime claims.
+
+The next useful stories will come from actual observations: a resource constraint, a failed service check, or a configuration change, together with what was learned from it.

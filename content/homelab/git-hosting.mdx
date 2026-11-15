@@ -1,0 +1,15 @@
+## A place for repositories
+
+Gitea provides self-hosted Git repository management, with PostgreSQL as its database. The stack is managed separately from the automation services using Docker Compose.
+
+## Separating application and data
+
+Repository storage and database data persist outside the application containers. The application can be updated or recreated while retaining the information it manages.
+
+Keeping this as its own stack also gives it a distinct maintenance boundary: its configuration, data, and recovery requirements can be considered together.
+
+## Why it belongs in the lab
+
+Running a Git service is an opportunity to understand the operational work behind a familiar development tool. Deployment is one part of that work; storage, access, upgrades, and recovery matter just as much.
+
+This overview describes the documented setup. Private repositories and their contents are not exposed through this portfolio.

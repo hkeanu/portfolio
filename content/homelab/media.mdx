@@ -1,0 +1,15 @@
+## Infrastructure used day to day
+
+The personal media stack includes Jellyfin for video libraries and Audiobookshelf for audiobooks and podcasts. It is a practical part of the homelab: services with storage, permissions, and maintenance needs that recur over time.
+
+## Storage has its own role
+
+Application configuration is kept separate from the media library. Containers mount the directories they need, and Jellyfin’s documented library mounts are read-only.
+
+That separation makes it easier to reason about replacing an application container without confusing its configuration with the larger collection it reads.
+
+## What this helps me explore
+
+Self-hosting everyday services creates opportunities to understand filesystem permissions, container mounts, hardware acceleration, and storage planning in context.
+
+This page focuses on those infrastructure concerns. Personal library contents and service administration interfaces are not part of the public portfolio.
