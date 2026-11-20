@@ -85,6 +85,6 @@ Import this repository as a Next.js project, use the root directory and the defa
 
 ## Design and accessibility
 
-The visual system uses local Manrope variable fonts, charcoal surfaces, warm ivory, muted green, and custom SVG system illustrations. GSAP enhances scroll reveals without scroll hijacking. Content is rendered in HTML; a reduced-motion preference disables reveals and illustration animation. The architecture explorer uses native buttons with pressed states, and the mobile menu supports Escape with focus restoration. No 3D engine, remote font request, analytics, fake metrics, or live service-status dependency is included.
+The visual system pairs local Manrope and system serif type with near-black navy and steel-blue accents. The Afterimage hero loops while it is visible in the active tab and offers playback controls. With reduced motion enabled, the sculpture starts still and visitors can choose to play it. Page entrances, scroll reveals, and interface transitions also respect reduced motion. The architecture explorer uses native buttons with pressed states, and the mobile menu supports Escape with focus restoration. The site loads its typography and artwork locally.
 
 Manrope is by the Manrope Project Authors, distributed under the SIL Open Font License. Its license is retained at `public/licenses/manrope.txt`.

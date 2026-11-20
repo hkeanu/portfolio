@@ -12,8 +12,9 @@ export function PageMotion() {
     const media = gsap.matchMedia();
     media.add("(prefers-reduced-motion: no-preference)", () => {
       gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach(element => {
-        gsap.fromTo(element, { y: 24, opacity: 0 }, {
-          y: 0, opacity: 1, duration: 0.85, ease: "power2.out", clearProps: "transform,opacity",
+        const mediaReveal = element.dataset.reveal === "media";
+        gsap.fromTo(element, { y: mediaReveal ? 34 : 24, scale: mediaReveal ? .975 : 1, opacity: 0 }, {
+          y: 0, scale: 1, opacity: 1, duration: mediaReveal ? 1 : .7, ease: "power2.out", clearProps: "transform,opacity",
           scrollTrigger: { trigger: element, start: "top 94%", once: true },
         });
       });

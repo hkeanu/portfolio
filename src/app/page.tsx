@@ -1,23 +1,39 @@
 import Link from "next/link";
 import { Arrow, Symbol } from "@/components/icons";
 import { Eyebrow, TextLink, ConnectSection } from "@/components/ui";
-import { SystemSculpture } from "@/components/system-sculpture";
+import { AfterimageHero } from "@/components/afterimage-hero";
 import { CredentialRow } from "@/components/credential-row";
 import { certifications } from "@/lib/certifications";
+import { getPublicServices } from "@/lib/content";
+
+const selectedWork = [
+  { slug: "automation", label: "Automation & documents", tools: "n8n / Python" },
+  { slug: "git-hosting", label: "Self-hosted Git", tools: "Gitea / PostgreSQL" },
+  { slug: "monitoring", label: "Monitoring", tools: "Beszel / Uptime Kuma" },
+];
 
 export default function Home() {
+  const services = getPublicServices();
+  const work = selectedWork.filter(item => services.some(service => service.slug === item.slug));
   return <>
-    <section className="hero shell">
-      <div className="hero-topline"><Eyebrow>Keanu Holgado / Personal portfolio</Eyebrow><span className="practice-status mono"><i /> A practice in progress</span></div>
-      <div className="hero-grid">
-        <div className="hero-copy">
-          <h1 data-reveal>Curiosity,<br />put to <em>work.</em></h1>
-          <p className="hero-description" data-reveal>I’m Keanu. I work with data, build automations, and explore the systems that connect them.</p>
-          <div className="hero-actions" data-reveal><Link href="/homelab" className="button button-primary">Step inside the homelab <Arrow diagonal /></Link><TextLink href="/about">A little about me</TextLink></div>
+    <AfterimageHero />
+    <section className="selected-work" id="selected-work" aria-labelledby="selected-work-title">
+      <div className="shell selected-work-inner">
+        <div data-reveal>
+          <Eyebrow>Selected homelab work</Eyebrow>
+          <h2 id="selected-work-title">What I build and run.</h2>
         </div>
-        <SystemSculpture />
+        <ul data-reveal>
+          {work.map(item => (
+            <li key={item.slug}>
+              <Link href={`/homelab/services/${item.slug}`}>
+                <span>{item.label}</span>
+                <span className="mono">{item.tools}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="hero-bottom"><span className="mono">Based in the Philippines · Thinking in systems</span><a className="scroll-cue mono" href="#practice">Follow the curiosity <span aria-hidden="true">↓</span></a></div>
     </section>
 
     <section id="practice" className="practice-section shell section-space">
@@ -36,7 +52,7 @@ export default function Home() {
         <div className="feature-top"><Eyebrow number="02">The homelab</Eyebrow><span className="mono">A place to learn by doing</span></div>
         <div className="feature-grid">
           <div className="feature-copy" data-reveal><h2>A small server.<br /><em>A bigger playground.</em></h2><p>Automation, self-hosted tools, and the occasional lesson in why something stopped working. My homelab is where ideas meet the practical details.</p><TextLink href="/homelab">Take a look inside</TextLink></div>
-          <Link href="/homelab" className="lab-preview" aria-label="Explore the homelab architecture" data-reveal>
+          <Link href="/homelab" className="lab-preview" aria-label="Explore the homelab architecture" data-reveal="media">
             <div className="lab-preview-top mono"><span>Home server / System sketch</span><Arrow diagonal width="16" height="16" /></div>
             <div className="preview-server"><span className="server-light" /><span className="server-slots" /><Symbol kind="systems" /><span className="mono">Ubuntu + Docker</span></div>
             <div className="preview-branches"><span /><span /><span /></div>

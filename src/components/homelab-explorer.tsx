@@ -17,7 +17,7 @@ export function HomelabExplorer({ services }: { services: Entry[] }) {
   const selected = services.find(service => service.id === activeId) ?? services[0];
   if (!selected) return null;
   return <div className="lab-explorer">
-    <div className="lab-map">
+    <div className="lab-map" data-reveal="media">
       <div className="map-heading mono"><span>System overview</span><span>Docker / Ubuntu</span></div>
       <div className="access-layer"><span>Cloudflare Tunnel</span><span>Tailscale</span></div>
       <div className="map-connector" />
@@ -27,10 +27,12 @@ export function HomelabExplorer({ services }: { services: Entry[] }) {
       <p className="map-note mono">Select a stack to look closer <Arrow width="14" height="14" /></p>
     </div>
     <div className="service-preview" id="service-preview" aria-live="polite" aria-atomic="true">
-      <span className="eyebrow">Inside the lab / 0{services.indexOf(selected) + 1}</span>
-      <h3>{selected.title}</h3><p>{selected.summary}</p>
-      <div className="tech-tags">{selected.technologies.map(tech => <span key={tech}>{tech}</span>)}</div>
-      <Link className="text-link" href={`/homelab/services/${selected.slug}`}>Explore this stack <Arrow diagonal /></Link>
+      <div className="service-preview-content" key={selected.id}>
+        <span className="eyebrow">Inside the lab / 0{services.indexOf(selected) + 1}</span>
+        <h3>{selected.title}</h3><p>{selected.summary}</p>
+        <div className="tech-tags">{selected.technologies.map(tech => <span key={tech}>{tech}</span>)}</div>
+        <Link className="text-link" href={`/homelab/services/${selected.slug}`}>Explore this stack <Arrow diagonal /></Link>
+      </div>
       <span className="preview-note">Documented configuration · Not live telemetry</span>
     </div>
   </div>;

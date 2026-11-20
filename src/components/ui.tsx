@@ -9,10 +9,10 @@ export function TextLink({ href, children, className = "" }: { href: string; chi
   return <Link href={href} className={`text-link ${className}`}>{children}<Arrow diagonal /></Link>;
 }
 export function PageIntro({ number, label, title, accent, children }: { number: string; label: string; title: string; accent?: string; children: ReactNode }) {
-  return <section className="page-intro shell">
+  return <section className="page-intro shell" data-entrance>
     <Eyebrow number={number}>{label}</Eyebrow>
-    <h1 data-reveal>{title}{accent && <><br /><em>{accent}</em></>}</h1>
-    <div className="intro-description" data-reveal>{children}</div>
+    <h1>{title}{accent && <><br /><em>{accent}</em></>}</h1>
+    <div className="intro-description">{children}</div>
   </section>;
 }
 export function ConnectSection() {

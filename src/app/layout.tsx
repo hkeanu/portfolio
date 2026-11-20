@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: { title: "Keanu Holgado — A practice in curiosity", description: site.description, type: "website", locale: "en_US", siteName: site.name },
   twitter: { card: "summary_large_image" },
 };
-export const viewport: Viewport = { themeColor: "#131510", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#06090f", colorScheme: "dark" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="en"><body><a className="skip-link" href="#main-content">Skip to content</a><Header /><main id="main-content">{children}</main><Footer /><PageMotion /></body></html>;
