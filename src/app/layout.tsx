@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/manrope";
 import "./globals.css";
+import "./studio.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { PageMotion } from "@/components/motion";
+import { PageTransitions } from "@/components/page-transitions";
 import { getSiteUrl, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -14,8 +16,8 @@ export const metadata: Metadata = {
   openGraph: { title: "Keanu Holgado — A practice in curiosity", description: site.description, type: "website", locale: "en_US", siteName: site.name },
   twitter: { card: "summary_large_image" },
 };
-export const viewport: Viewport = { themeColor: "#06090f", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#0b1412", colorScheme: "dark" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body><a className="skip-link" href="#main-content">Skip to content</a><Header /><main id="main-content">{children}</main><Footer /><PageMotion /></body></html>;
+  return <html lang="en"><body><PageTransitions><a className="skip-link" href="#main-content">Skip to content</a><Header /><main id="main-content" tabIndex={-1}>{children}</main><Footer /><PageMotion /></PageTransitions></body></html>;
 }

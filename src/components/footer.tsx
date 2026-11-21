@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/transition-link";
 import { site } from "@/lib/site";
 import { Arrow } from "./icons";
 

@@ -22,6 +22,14 @@ npm run preview
 
 The preview helper copies public assets and static chunks into the standalone output before starting its Node server. Stop it with Ctrl+C. Vercel builds the same repository directly with `npm run build`; it does not need this helper or Docker.
 
+The production build explicitly uses Webpack. On this Windows environment, Turbopack exited while starting its CSS worker; the Webpack production build passes. The application remains a standard Next.js standalone build.
+
+## Systems Studio design
+
+The visual system uses green-black surfaces, mint and silver accents, a contrasting light work gallery, editorial typography, and a sculpture of three rounded interlocking ribbons. Visitors can explore Data, Automation, and Systems through linked explanations and corresponding 3D emphasis. Original project diagrams carry into case-study headers through native shared-element transitions. See [the implementation notes](docs/IMMERSIVE_DESIGN.md) for choreography, fallbacks, asset sources, and verification.
+
+The hero loads Three.js and React Three Fiber on demand after hydration. Reduced-motion users, data-saving connections, devices reporting two or fewer CPU threads, and browsers without WebGL2 start with locally served static artwork. When supported, visitors can explicitly enable 3D, change the view, and play or pause motion. All content and navigation remain HTML.
+
 ## Content and identity
 
 | Location | Purpose |

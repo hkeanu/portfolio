@@ -3,7 +3,7 @@ import { PageIntro, Eyebrow, ConnectSection } from "@/components/ui";
 import { HomelabExplorer } from "@/components/homelab-explorer";
 import { getPublicServices } from "@/lib/content";
 import { Arrow } from "@/components/icons";
-import Link from "next/link";
+import Link from "@/components/transition-link";
 
 export const metadata: Metadata = { title: "Homelab", description: "Inside Keanu’s home server: Docker-based automation, Git hosting, monitoring, and personal media services." };
 

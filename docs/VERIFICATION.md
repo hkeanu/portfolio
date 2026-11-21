@@ -1,5 +1,31 @@
 # Implementation verification
 
+## Systems Studio evolution — 21 November 2026
+
+The site now uses a green-black/mint visual system, a contrasting light work gallery, a rounded procedural sculpture with accessible discipline selection, coordinated project entrances, and shared project artwork in case studies. Keyboard navigation bypasses route and entrance animations; reduced-motion and unsupported-WebGL paths retain static artwork and working links.
+
+The standalone production build, TypeScript, and 5 content checks pass. Browser coverage expands to 36 cases (33 applicable cases, 3 device-specific skips), including real sculpture changes with playback paused, discipline links without WebGL, keyboard-instant updates, project snapshot readiness, article scroll position at snapshot time, and the existing route/filter/fallback checks. Desktop/mobile screenshots and a local motion recording are reviewed. The discipline panel retains stable height across selections at 320px, 390px, 768px, 1024px, and 1440px.
+
+See [the motion timeline, review, and local performance sample](IMMERSIVE_DESIGN.md). The optional scene remains approximately 247 KiB of compressed JavaScript beyond the static path. These checks use Chromium desktop and mobile emulation; physical phones, Safari, deployment, and field Core Web Vitals remain outside this local verification.
+
+## Connected Systems redesign — 21 November 2026
+
+| Check | Result |
+| --- | --- |
+| TypeScript | Passed |
+| Content validation | 5 passed |
+| Standalone production build | Passed using Webpack |
+| Playwright Chromium desktop and mobile emulation | 27 passed; 3 cases skipped for the inapplicable device project |
+| Responsive layout | No horizontal overflow on launch pages at 320px, 390px, 768px, 1024px, and 1440px |
+| Browser review | Desktop and mobile rendered pages inspected |
+| Development server | Homepage HTTP 200 on loopback |
+
+The expanded browser coverage includes explicit 3D view changes, motion pausing, suspended offscreen WebGL drawing, context loss and unsupported canvas fallbacks, live reduced-motion changes, no-JavaScript navigation, local logo loading, interrupted route transitions, unsupported View Transitions, browser Back, existing content routes, filters, and keyboard navigation. Static screenshot comparison excludes overlaid controls and tolerates minor GPU antialiasing differences.
+
+The scene uses a local poster for reduced motion and constrained devices, and lazy-loads its renderer. [Design and performance notes](IMMERSIVE_DESIGN.md) record asset sources, dependency choices, local throttled loading samples, and limitations. Physical mobile GPUs, Safari, production Core Web Vitals, and deployment on the actual host remain unverified. The existing deployment configuration was retained.
+
+## Original release — 15 November 2026
+
 Verified locally on 15 November 2026.
 
 | Check | Result |
