@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef, type RefObject } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { BufferGeometry, Float32BufferAttribute, PMREMGenerator, Color, MathUtils, type Group, type Mesh, type MeshStandardMaterial } from "three";
+import { BufferGeometry, Float32BufferAttribute, PMREMGenerator, Color, MathUtils, Object3D, type Group, type InstancedMesh, type LineSegments, type LineBasicMaterial, type Mesh, type MeshStandardMaterial } from "three";
+import { CustomEase } from "gsap/CustomEase";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 export type SceneInput = { x: number; y: number; scroll: number };
@@ -12,6 +13,20 @@ const disciplines = ["data", "automation", "systems"];
 const silver = new Color("#dbece5");
 const mint = new Color("#91d9bd");
 const dim = new Color("#455f57");
+const poses: [number, number, number][] = [[.12, -.12, 0], [1.12, .48, .95], [-.72, 1.25, -.6]];
+const revealEase = CustomEase.create("ribbon-reveal", "0.23,1,0.32,1");
+
+function makeOutline() {
+  const positions: number[] = [];
+  for (const edge of [-.19, .19]) for (let i = 0; i < 180; i++) {
+    for (const step of [i, i + 1]) {
+      const a = step / 180 * Math.PI * 2;
+      const r = 1.38 + .12 * Math.cos(a * 3) + edge;
+      positions.push(r * Math.cos(a), r * Math.sin(a), .22 * Math.sin(a * 2));
+    }
+  }
+  return new BufferGeometry().setAttribute("position", new Float32BufferAttribute(positions, 3));
+}
 
 function makeRibbon() {
   const positions: number[] = [];
@@ -42,22 +57,27 @@ function Sculpture({ playing, active, perspective, discipline, immediate, input,
   const group = useRef<Group>(null);
   const phase = useRef(0);
   const reported = useRef(false);
+  const environmentReady = useRef(false);
   const { gl, scene, invalidate } = useThree();
   const geometry = useMemo(makeRibbon, []);
+  const outline = useMemo(makeOutline, []);
+  const signal = useMemo(() => new Object3D(), []);
   useEffect(() => {
     const pmrem = new PMREMGenerator(gl);
     const room = new RoomEnvironment();
     const target = pmrem.fromScene(room, .04);
     scene.environment = target.texture;
+    environmentReady.current = true;
     const lost = (event: Event) => { event.preventDefault(); onFailure(); };
     gl.domElement.addEventListener("webglcontextlost", lost);
     invalidate();
     return () => {
       gl.domElement.removeEventListener("webglcontextlost", lost);
       scene.environment = null;
-      target.dispose(); room.dispose(); pmrem.dispose(); geometry.dispose();
+      environmentReady.current = false;
+      target.dispose(); room.dispose(); pmrem.dispose(); geometry.dispose(); outline.dispose();
     };
-  }, [gl, scene, geometry, onReady, onFailure, invalidate]);
+  }, [gl, scene, geometry, outline, onReady, onFailure, invalidate]);
   useEffect(() => { if (active) invalidate(); }, [playing, active, perspective, discipline, immediate, invalidate]);
   useEffect(() => {
     if (!active || !playing) return;
@@ -68,8 +88,12 @@ function Sculpture({ playing, active, perspective, discipline, immediate, input,
   }, [active, playing, invalidate]);
   useFrame((_, delta) => {
     if (!group.current) return;
+    // Explicit still views and keyboard input resolve to the completed artwork.
+    if (immediate && phase.current < .7) phase.current = .7;
     if (playing && active) phase.current += Math.min(delta, .05);
-    const t = phase.current;
+    const progress = revealEase(Math.min(1, phase.current / .7));
+    const t = Math.max(0, phase.current - .7);
+    geometry.setDrawRange(0, Math.floor((geometry.index!.count / 6) * progress) * 6);
     const view = perspective === 1 ? .65 : perspective === 2 ? -.55 : 0;
     const target = [-.28 + view + input.current.y * .16 + Math.sin(t * .4) * .04,
       .35 + input.current.x * .22 + input.current.scroll * .35 + Math.sin(t * .25) * .06,
@@ -85,26 +109,48 @@ function Sculpture({ playing, active, perspective, discipline, immediate, input,
       group.current!.rotation[axis] = Math.abs(next - value) < .0005 ? value : next;
     });
     group.current.children.forEach((child, i) => {
-      const mesh = child as Mesh<BufferGeometry, MeshStandardMaterial>;
+      const ribbon = child as Group;
+      const mesh = ribbon.children[0] as Mesh<BufferGeometry, MeshStandardMaterial>;
+      const lines = ribbon.children[1] as LineSegments<BufferGeometry, LineBasicMaterial>;
+      const signals = ribbon.children[2] as InstancedMesh;
+      lines.material.opacity = 1 - progress;
+      lines.visible = progress < 1;
+      signals.visible = progress >= 1;
       const selected = disciplines[i] === discipline;
       const color = discipline === "all" ? (i === 1 ? mint : silver) : selected ? mint : dim;
       mesh.material.color.lerp(color, blend);
       const scale = discipline === "all" ? 1 : selected ? 1.055 : .95;
-      const next = MathUtils.lerp(mesh.scale.x, scale, blend);
+      const next = MathUtils.lerp(ribbon.scale.x, scale, blend);
       const colorDelta = Math.abs(mesh.material.color.r - color.r) + Math.abs(mesh.material.color.g - color.g) + Math.abs(mesh.material.color.b - color.b);
       settling ||= Math.abs(next - scale) > .0005 || colorDelta > .001;
       if (colorDelta <= .001) mesh.material.color.copy(color);
-      mesh.scale.setScalar(Math.abs(next - scale) < .0005 ? scale : next);
+      ribbon.scale.setScalar(Math.abs(next - scale) < .0005 ? scale : next);
+      const pose = poses[i];
+      ribbon.rotation.set(pose[0] + Math.sin(t * .23) * .09, pose[1] + Math.sin(t * .19) * .08, pose[2]);
+      for (let j = 0; j < 3; j++) {
+        const angle = t * (.24 + i * .035) + j / 3 * Math.PI * 2 + i;
+        const radius = 1.38 + .12 * Math.cos(angle * 3);
+        signal.position.set(radius * Math.cos(angle), radius * Math.sin(angle), .22 * Math.sin(angle * 2) + .095);
+        signal.scale.setScalar(discipline === "all" || selected ? 1 : .55);
+        signal.updateMatrix();
+        signals.setMatrixAt(j, signal.matrix);
+      }
+      signals.instanceMatrix.needsUpdate = true;
     });
     group.current.position.y = Math.sin(t * .5) * .045;
     // Switch off the poster after a completed render, not just renderer setup.
-    if (!reported.current) { reported.current = true; queueMicrotask(onReady); }
+    if (!reported.current && environmentReady.current) { reported.current = true; queueMicrotask(onReady); }
     if (active && (playing || settling)) invalidate();
   });
   return <group ref={group}>
-    <mesh geometry={geometry} rotation={[.12, -.12, 0]}><meshStandardMaterial color="#dbece5" metalness={.94} roughness={.21} /></mesh>
-    <mesh geometry={geometry} rotation={[1.12, .48, .95]}><meshStandardMaterial color="#91d9bd" metalness={.85} roughness={.25} /></mesh>
-    <mesh geometry={geometry} rotation={[-.72, 1.25, -.6]}><meshStandardMaterial color="#dbece5" metalness={.94} roughness={.23} /></mesh>
+    {poses.map((pose, i) => <group key={disciplines[i]} rotation={pose}>
+      <mesh geometry={geometry}><meshStandardMaterial color={i === 1 ? "#91d9bd" : "#dbece5"} metalness={i === 1 ? .85 : .94} roughness={i === 1 ? .25 : .21} /></mesh>
+      <lineSegments geometry={outline}><lineBasicMaterial color="#b9dfc4" transparent depthWrite={false} /></lineSegments>
+      <instancedMesh args={[undefined, undefined, 3]} frustumCulled={false}>
+        <sphereGeometry args={[.038, 12, 8]} />
+        <meshStandardMaterial color="#e9f6d7" emissive="#b9dfc4" emissiveIntensity={1.4} roughness={.3} toneMapped={false} />
+      </instancedMesh>
+    </group>)}
   </group>;
 }
 

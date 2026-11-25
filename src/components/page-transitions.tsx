@@ -60,7 +60,14 @@ export function PageTransitions({ children }: { children: ReactNode }) {
     document.documentElement.dataset.pageTransition = "running";
     document.documentElement.dataset.routeArrival = "transition";
     delete document.documentElement.dataset.projectTransition;
-    if (url.pathname.startsWith("/homelab/services/")) document.documentElement.dataset.projectTransition = url.pathname.split("/").pop();
+    if (url.pathname.startsWith("/homelab/services/")) {
+      const slug = url.pathname.split("/").pop();
+      const artwork = Array.from(document.querySelectorAll<HTMLElement>(".project-art")).find(element =>
+        getComputedStyle(element).viewTransitionName === `project-${slug}`);
+      const bounds = artwork?.getBoundingClientRect();
+      // Only open a portal when a visible source frame can carry into the article.
+      if (bounds && bounds.bottom > 0 && bounds.top < innerHeight) document.documentElement.dataset.projectTransition = slug;
+    }
     const transition = document.startViewTransition(() => new Promise<void>(resolve => {
       const finish = () => {
         clearTimeout(timeout);

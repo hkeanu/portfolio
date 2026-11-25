@@ -26,11 +26,17 @@ test("the sculpture offers explicit perspective changes without autoplay", async
   const canvas = art.locator("canvas");
   // Controls overlay the canvas bounds on phones. Exclude their focus rings
   // from the image comparison while retaining the actual rendered sculpture.
-  const capture = () => canvas.screenshot({ style: ".scene-caption { visibility: hidden !important; }" });
+  const capture = async () => {
+    // Keep identical viewport framing: focusing controls and taking a section
+    // screenshot can otherwise move this canvas under the sticky mobile header.
+    await canvas.evaluate(element => window.scrollTo({ top: scrollY + element.getBoundingClientRect().top - 100, behavior: "instant" }));
+    return canvas.screenshot({ style: ".scene-caption { visibility: hidden !important; }" });
+  };
   await expect(canvas).toHaveCount(0);
   await page.getByRole("button", { name: "Enable 3D artwork" }).click();
   await expect(art).toHaveAttribute("data-rendered", "true");
   await page.evaluate(() => document.fonts.ready);
+  await expect(page.locator(".scene-layer")).toHaveCSS("opacity", "1");
   const original = await capture();
   const perspective = page.getByRole("button", { name: "Change sculpture perspective" });
   await perspective.focus();
@@ -170,6 +176,7 @@ test("discipline selections change the sculpture while explicit 3D playback stay
   const art = page.locator(".hero-artwork");
   await expect(art).toHaveAttribute("data-rendered", "true");
   await page.evaluate(() => document.fonts.ready);
+  await expect(page.locator(".scene-layer")).toHaveCSS("opacity", "1");
   const capture = () => art.locator("canvas").screenshot({ style: ".scene-caption{visibility:hidden!important}" });
   const original = await capture();
   const choices = page.getByRole("group", { name: "Explore my disciplines" });

@@ -5,6 +5,7 @@ import { AfterimageHero } from "@/components/afterimage-hero";
 import { CredentialRow } from "@/components/credential-row";
 import { ToolLogo, ToolStrip } from "@/components/tool-logo";
 import { ProjectArt } from "@/components/project-art";
+import { RevealHeading } from "@/components/reveal-heading";
 import { certifications } from "@/lib/certifications";
 import { getPublicServices } from "@/lib/content";
 
@@ -20,7 +21,7 @@ export default function Home() {
     <AfterimageHero />
     <ToolStrip />
     <div className="work-surface"><section className="selected-work shell section-space" id="selected-work" aria-labelledby="selected-work-title">
-      <div className="section-heading-row" data-reveal><div><Eyebrow>Selected homelab work</Eyebrow><h2 id="selected-work-title">Ideas, made <em>tangible.</em></h2></div><p>Built, operated, documented.<br />A few connections in practice.</p></div>
+      <div className="section-heading-row"><div><Eyebrow>Selected homelab work</Eyebrow><RevealHeading id="selected-work-title" lines={[<>Ideas, made <em>tangible.</em></>]} /></div><p data-reveal>Built, operated, documented.<br />A few connections in practice.</p></div>
       <div className="project-grid" data-reveal-group>{selectedWork.map(item => {
         const service = services.find(service => service.slug === item.slug);
         return service && <Link href={`/homelab/services/${item.slug}`} className="project-card" key={item.slug} data-reveal="media">
@@ -33,7 +34,7 @@ export default function Home() {
     <section id="practice" className="practice-section shell section-space">
       <div className="section-side"><Eyebrow>The connecting thread</Eyebrow><span className="side-note mono">Question. Build. Understand.<br />Then connect the dots.</span><div className="practice-orbit" aria-hidden="true"><span /><span /><span /></div></div>
       <div className="practice-main">
-        <h2 data-reveal>A few interests.<br /><span className="muted">A lot of connections.</span></h2>
+        <RevealHeading lines={["A few interests.", <span className="muted" key="connections">A lot of connections.</span>]} />
         <p className="section-lead" data-reveal>I’m interested in what happens between disciplines: when data becomes a useful insight, a repetitive task becomes a workflow, or a small server becomes a place to learn.</p>
         <div className="practice-rows">{[
           { kind: "data" as const, title: "Make sense of data", body: "Working with data, analysis, and the questions behind them.", tools: ["Python", "R", "Power BI"] },
@@ -45,7 +46,7 @@ export default function Home() {
 
     <section className="homelab-feature section-space"><div className="shell">
       <div className="feature-top"><Eyebrow>The homelab</Eyebrow><span className="mono">A place to learn by doing</span></div>
-      <div className="feature-grid"><div className="feature-copy" data-reveal><h2>A small server.<br /><em>A bigger playground.</em></h2><p>Automation, self-hosted tools, and the occasional lesson in why something stopped working. My homelab is where ideas meet the practical details.</p><TextLink href="/homelab">Take a look inside</TextLink></div>
+      <div className="feature-grid"><div className="feature-copy"><RevealHeading lines={["A small server.", <em key="playground">A bigger playground.</em>]} /><p data-reveal>Automation, self-hosted tools, and the occasional lesson in why something stopped working. My homelab is where ideas meet the practical details.</p><TextLink href="/homelab">Take a look inside</TextLink></div>
         <Link href="/homelab" className="lab-preview" aria-label="Explore the homelab architecture" data-reveal="media"><div className="lab-preview-top mono">Home server / System sketch</div><div className="preview-server"><ToolLogo name="Docker" label={false} /><span>Ubuntu + Docker</span><span className="server-slots" /></div><div className="preview-branches"><span /><span /><span /></div><div className="preview-services"><span><ToolLogo name="n8n" label={false} />Automation</span><span><ToolLogo name="Gitea" label={false} />Git hosting</span><span><Symbol kind="data" />Monitoring</span></div><div className="lab-preview-bottom mono">Connected tools. Practical learning.</div></Link>
       </div>
     </div></section>
