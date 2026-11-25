@@ -4,6 +4,7 @@ import { Eyebrow, TextLink, ConnectSection } from "@/components/ui";
 import { AfterimageHero } from "@/components/afterimage-hero";
 import { CredentialRow } from "@/components/credential-row";
 import { ToolLogo, ToolStrip } from "@/components/tool-logo";
+import { ProjectArtMotionToggle } from "@/components/project-art-motion";
 import { ProjectArt } from "@/components/project-art";
 import { RevealHeading } from "@/components/reveal-heading";
 import { certifications } from "@/lib/certifications";
@@ -22,6 +23,7 @@ export default function Home() {
     <ToolStrip />
     <div className="work-surface"><section className="selected-work shell section-space" id="selected-work" aria-labelledby="selected-work-title">
       <div className="section-heading-row"><div><Eyebrow>Selected homelab work</Eyebrow><RevealHeading id="selected-work-title" lines={[<>Ideas, made <em>tangible.</em></>]} /></div><p data-reveal>Built, operated, documented.<br />A few connections in practice.</p></div>
+      <ProjectArtMotionToggle />
       <div className="project-grid" data-reveal-group>{selectedWork.map(item => {
         const service = services.find(service => service.slug === item.slug);
         return service && <Link href={`/homelab/services/${item.slug}`} className="project-card" key={item.slug} data-reveal="media">
